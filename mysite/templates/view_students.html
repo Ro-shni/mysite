@@ -1,0 +1,17 @@
+{% for branch_section, contacts in grouped_contacts.items %}
+    <h2>Branch: {{ branch_section.0 }} - Section: {{ branch_section.1 }}</h2>
+    <ul>
+        {% for contact in contacts %}
+            <li>{{ contact.fullname }}</li>
+            <!--<li>{{ contact.id }}</li>-->
+            {% for worker in workers %}
+                {% if worker.id == contact.staff_id %}<span>
+                    Worker Name: {{ worker.username }}</li><span>
+                    Worker ID: {{ worker.id }} <span>
+                    <a class="btn btn-info btn-sm" href="{% url 'studentdetail' worker.id %}">View</a>
+                
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endfor %}

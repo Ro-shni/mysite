@@ -1,0 +1,534 @@
+<!Doctype HTML>
+	<html>
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="css/style.css" type="text/css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+
+
+	<body>
+		
+		<div id="mySidenav" class="sidenav">
+            <p class="logo">
+                <span class="initial">{{ user.username|slice:":1" }}</span>{{ user.username|slice:"1:" }}
+            </p>         
+            <a href="home" class="icon-a"><i class="fa fa-Dashboard"></i>☰ Dashboard</a>
+            {% if user.is_authenticated and user.is_staff and user.is_superuser%}
+            <a href="view_students"class="icon-a"><i class="fa fa-users icons"></i>   Students</a>
+            <a href="#"class="icon-a"><i class="fa fa-tasks icons"></i>   Inventory</a>
+            {%endif%}
+            <a href="profile"class="icon-a"><i class="fa fa-user icons"></i>   View Profile</a>
+            <!--<a href="contact"class="icon-a"><i class="fa fa-user icons"></i>   Edit Profile</a>-->
+            <a href="certi"class="icon-a" href="{% url 'student_index'%}"><i class="fa fa-list-alt icons"></i>   Updates</a>
+            <a href="projects"class="icon-a" href="{% url 'project_list'%}"><i class="fa fa-list icons"></i>   Projects</a>
+            <a href="{% url 'logout' %}"class="icon-a"><i class="fa fa-users icons"></i>Logout</a>
+            <!--<a class="nav-link me-2 btn btn-outline-danger" href="{% url 'logout' %}"><p style="color:white">Logout</p></a>-->
+	  </div>
+
+    <div id="main">
+      <div class="head">
+        <div class="col-div-6">
+          <span style="font-size:30px;cursor:pointer; color: white;" class="nav"  >☰ Dashboard</span>
+          <span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  >☰ Dashboard</span>
+        </div>
+      {% if user.is_authenticated and user.is_staff and user.is_superuser%}
+      <div class="col-div-6">
+        <div class="profile">
+          <img src="images/user.png" class="pro-img" />
+          <p>Dept AI<span>Future AI</span></p>
+        </div>
+      </div>
+        <div class="clearfix"></div>
+      </div>
+
+		<div class="clearfix"></div>
+		<br/>
+		
+		<div class="col-div-3">
+			<div class="box">
+				<p>67<br/><span>Students</span></p>
+				<i class="fa fa-users box-icon"></i>
+			</div>
+		</div>
+		<div class="col-div-3">
+			<div class="box">
+				<p>88<br/><span>Projects</span></p>
+				<i class="fa fa-list box-icon"></i>
+			</div>
+		</div>
+		<div class="col-div-3">
+			<div class="box">
+				<p>99<br/><span>Updates</span></p>
+				<i class="fa fa-shopping-bag box-icon"></i>
+			</div>
+		</div>
+		<div class="col-div-3">
+			<div class="box">
+				<p>78<br/><span>Tasks</span></p>
+				<i class="fa fa-tasks box-icon"></i>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<br/><br/>
+		<div class="col-div-8">
+			<div class="box-8">
+			<div class="content-box">
+				<p>Dept AI <span>Sell All</span></p>
+				<br/>
+				<table>
+          {% if grouped_contacts %}
+    <table>
+        <thead>
+            <tr>
+                <th>Branch</th>
+                <th>Section</th>
+                <th>Strength</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for branch_section, contacts in grouped_contacts.items %}
+                <tr>
+                    <td>{{ branch_section.0 }}</td>
+                    <td>{{ branch_section.1 }}</td>
+                    <td>{{ contacts|length }}</td> <!-- Strength is the count of contacts for this branch and section -->
+                    <td>
+                      <a class="btn btn-info btn-sm" href="{% url 'view_students_by_branch_section' branch=branch_section.0 section=branch_section.1 %}">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No contacts found.</p>
+{% endif %}
+	      </table>
+			</div>
+		</div>
+	</div>
+		<div class="col-div-4">
+			<div class="box-4">
+			<div class="content-box">
+				<p>Total Strength<span>Sell All</span></p>
+
+				<div class="circle-wrap">
+	    <div class="circle">
+	      <div class="mask full">
+	        <div class="fill"></div>
+	      </div>
+	      <div class="mask half">
+	        <div class="fill"></div>
+	      </div>
+	      <div class="inside-circle">
+          <p>{{ total_users }}</p>
+        </div>
+	    </div>
+	  </div>
+			</div>
+		</div>
+		</div>
+			
+		<div class="clearfix"></div>
+  {%else%}
+  <div id="main">
+    <div class="head">
+        <div class="col-div-6">
+          {% include 'student_index.html'%}
+	{% endif %}
+</div>
+  
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(".nav").click(function(){
+        $("#mySidenav").css('width','70px');
+        $("#main").css('margin-left','70px');
+        $(".logo").css('visibility', 'hidden');
+        $(".logo span").css('visibility', 'visible');
+        $(".logo span").css('margin-left', '-10px');
+        $(".icon-a").css('visibility', 'hidden');
+        $(".icons").css('visibility', 'visible');
+        $(".icons").css('margin-left', '-8px');
+          $(".nav").css('display','none');
+          $(".nav2").css('display','block');
+      });
+
+      $(".nav2").click(function(){
+          $("#mySidenav").css('width','300px');
+          $("#main").css('margin-left','300px');
+          $(".logo").css('visibility', 'visible');
+          $(".icon-a").css('visibility', 'visible');
+          $(".icons").css('visibility', 'visible');
+          $(".nav").css('display','block');
+            $(".nav2").css('display','none');
+      });
+    </script>
+	</body>
+	</html>
+  <style>
+    /* Base styles */
+    body {
+        margin: 0px;
+        padding: 0px;
+        background-color: #02050A;
+        font-family: system-ui;
+    }
+    
+    /* Logo styles */
+    #mySidenav .logo .initial {
+        color: #02050A !important;
+        text-transform: uppercase;
+    }
+    
+    .first-letter {
+        color: #02050A;
+        font-weight: bold;
+    }
+    
+    .clearfix {
+        clear: both;
+    }
+    
+    .logo {
+        margin: 0px;
+        margin-left: 28px;
+        font-weight: bold;
+        color: #F6BF41;
+        margin-bottom: 30px;
+    }
+    
+    .logo span {
+        color: #808080;
+    }
+    
+    /* Sidebar styles */
+    .sidenav {
+        margin: 0;
+        height: 100%;
+        width: 300px;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #808080;
+        overflow: hidden;
+        transition: 0.5s;
+        padding-top: 30px;
+    }
+    
+    .sidenav a {
+        padding: 15px 8px 15px 32px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #02050A;
+        display: block;
+        transition: 0.3s;
+    }
+    
+    .sidenav a:hover {
+        color: #02050A;
+        background-color: #F6BF41;
+    }
+    
+    .sidenav {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+    }
+    
+    #main {
+        transition: margin-left .5s;
+        padding: 16px;
+        margin-left: 300px;
+    }
+    
+    .head {
+        padding: 20px;
+    }
+    
+    .col-div-6 {
+        width: 50%;
+        float: left;
+    }
+    
+    .profile {
+        display: inline-block;
+        float: right;
+        width: 160px;
+    }
+    
+    .pro-img {
+        float: left;
+        width: 40px;
+        margin-top: 5px;
+    }
+    
+    .profile p {
+        color: #F6BF41;
+        font-weight: 500;
+        margin-left: 55px;
+        margin-top: 10px;
+        font-size: 13.5px;
+    }
+    
+    .profile p span {
+        font-weight: 400;
+        font-size: 12px;
+        display: block;
+        color: #808080;
+    }
+    
+    .col-div-3 {
+        width: 25%;
+        float: left;
+    }
+    
+    .box {
+        width: 85%;
+        height: 100px;
+        background-color: #F6BF41;
+        margin-left: 10px;
+        padding: 10px;
+    }
+    
+    .box p {
+        font-size: 35px;
+        color: #02050A;
+        font-weight: bold;
+        line-height: 30px;
+        padding-left: 10px;
+        margin-top: 20px;
+        display: inline-block;
+    }
+    
+    .box p span {
+        font-size: 20px;
+        font-weight: 400;
+        color: #808080;
+    }
+    
+    .box-icon {
+        font-size: 40px!important;
+        float: right;
+        margin-top: 35px!important;
+        color: #02050A;
+        padding-right: 10px;
+    }
+    
+    .col-div-8 {
+        width: 70%;
+        float: left;
+    }
+    
+    .col-div-4 {
+        width: 30%;
+        float: left;
+    }
+    
+    .content-box {
+        padding: 20px;
+    }
+    
+    .content-box p {
+        margin: 0px;
+        font-size: 20px;
+        color: #808080;
+    }
+    
+    .content-box p span {
+        float: right;
+        background-color: #F6BF41;
+        padding: 3px 10px;
+        font-size: 15px;
+    }
+    
+    .box-8, .box-4 {
+        width: 95%;
+        background-color: #808080;
+        height: 330px;
+    }
+    
+    .nav2 {
+        display: none;
+    }
+    
+    .box-8 {
+        margin-left: 10px;
+    }
+    
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    thead {
+        background-color: #2F2F2F;
+    }
+    
+    th {
+        color: #F6BF41;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    td, th {
+        text-align: left;
+        padding: 15px;
+        color: #F6BF41;
+        border-bottom: 1px solid #808080;
+    }
+    
+    .circle-wrap {
+        margin: 50px auto;
+        width: 150px;
+        height: 150px;
+        background: #808080;
+        border-radius: 50%;
+    }
+    
+    .circle-wrap .circle .mask,
+    .circle-wrap .circle .fill {
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        border-radius: 50%;
+    }
+    
+    .circle-wrap .circle .mask {
+        clip: rect(0px, 150px, 150px, 75px);
+    }
+    
+    .circle-wrap .circle .mask .fill {
+        clip: rect(0px, 75px, 150px, 0px);
+        background-color: #2F2F2F;
+    }
+    
+    .circle-wrap .circle .mask.full,
+    .circle-wrap .circle .fill {
+        animation: fill ease-in-out 3s;
+        transform: rotate(126deg);
+    }
+    
+    @keyframes fill {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(126deg);
+        }
+    }
+    
+    .circle-wrap .inside-circle {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background-color: #02050A;
+        color: #F6BF41;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .circle-wrap .inside-circle p {
+        color: #F6BF41;
+        font-size: 24px;
+    }
+    
+    .content-box p {
+        color: #02050A;
+        font-size: 16px;
+    }
+    
+    /* Media queries for responsiveness */
+    
+    /* For smaller screens (e.g., mobile devices) */
+    @media screen and (max-width: 768px) {
+        .sidenav {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        
+        #main {
+            margin-left: 0;
+        }
+    
+        .col-div-6, .col-div-3, .col-div-8, .col-div-4 {
+            width: 100%;
+            float: none;
+        }
+    
+        .profile {
+            width: 100%;
+            float: none;
+            text-align: center;
+        }
+    
+        .box {
+            width: 90%;
+            margin-left: 5%;
+        }
+    
+        .circle-wrap {
+            width: 120px;
+            height: 120px;
+        }
+    
+        .circle-wrap .inside-circle {
+            width: 100px;
+            height: 100px;
+        }
+    
+        table {
+            font-size: 14px;
+        }
+    
+        th, td {
+            padding: 10px;
+        }
+    
+        .box p {
+            font-size: 25px;
+        }
+    }
+    
+    /* For very small screens (e.g., extra small devices) */
+    @media screen and (max-width: 480px) {
+        .sidenav {
+            width: 100%;
+            height: auto;
+        }
+    
+        .logo {
+            font-size: 20px;
+        }
+    
+        .box p {
+            font-size: 20px;
+        }
+    
+        .circle-wrap {
+            width: 100px;
+            height: 100px;
+        }
+    
+        .circle-wrap .inside-circle {
+            width: 80px;
+            height: 80px;
+        }
+    
+        table {
+            font-size: 12px;
+        }
+    
+        th, td {
+            padding: 8px;
+        }
+    }
+    
+</style>

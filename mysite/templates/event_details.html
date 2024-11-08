@@ -1,0 +1,17 @@
+<div class="container">
+    <h2>Event: {{ event.event_name }}</h2>
+    <p><strong>Event Type:</strong> {{ event.type }}</p>
+    <p><strong>Start Date:</strong> {{ event.event_start_date }}</p>
+    <p><strong>End Date:</strong> {{ event.event_end_date }}</p>
+
+    <h3>Registered Students</h3>
+    {% if registered_users %}
+        <ul>
+            {% for registration in registered_users %}
+                <li>{{ registration.user.get_full_name }} ({{ registration.user.username }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No students have registered for this event yet.</p>
+    {% endif %}
+</div>

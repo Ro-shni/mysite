@@ -1,0 +1,61 @@
+<!--
+<h2>Branch: {{ branch }} - Section: {{ section }}</h2>
+<ul>
+    {% for contact in contacts %}
+        <li>{{ contact.fullname }}</li>
+        <li>{{ contact.id }}</li>
+        {% for worker in workers %}
+            {% if worker.id == contact.staff_id %}<span>
+                Worker Name: {{ worker.username }}</li><span>
+                Worker ID: {{ worker.id }} <span>
+                <a class="btn btn-info btn-sm" href="{% url 'studentdetail' worker.id %}">View</a>
+            
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</ul>
+-->
+<h2>Student Details-Branch: {{ branch }} - Section: {{ section }}</h2>
+  <table>
+    <tr>
+        <th>contact name</th>
+        <th>Name</th>
+        <th>id</th>
+        <th>Profile</th>
+    </tr>
+   
+    {% for contact in contacts %}
+    {% for worker in workers %}
+    {% if worker.id == contact.staff_id %}
+    <tr>
+        <td>{{ contact.fullname }}</td>
+        <td>{{ worker.username }}</td>
+        <td>{{ worker.id }} </td>
+        <td><a class="btn btn-info btn-sm" href="{% url 'studentdetail' worker.id %}">View</a></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+  </table>
+
+  <style>
+    table{
+        background-color: beige;
+        margin: 20px;
+        border-collapse: separate;
+        border: solid;
+       border-collapse: collapse;
+    }
+    tr th{
+        padding: 20px;
+        border: double;
+    }
+    tr td{
+        border: solid;
+        border-collapse: collapse;
+        padding: 20px;
+    }
+    td{
+        background-color: rgb(208, 247, 247);
+    }
+  </style>

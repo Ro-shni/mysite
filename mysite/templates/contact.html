@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+        <style>
+            /* Main background */
+            body {
+                background: #2d2d2d;
+                color: white;
+            }
+    
+            /* Sidebar styling */
+            .sidenav {
+                height: 100%;
+                width: 300px;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #333;
+                color: white;
+                overflow-y: auto;
+                transition: 0.5s;
+            }
+    
+            /* Sidebar links */
+            .sidenav a {
+                padding: 15px 8px 15px 32px;
+                font-size: 20px;
+                color: #b0b0b0;
+                text-decoration: none;
+                display: block;
+                transition: 0.3s;
+            }
+    
+            /* Sidebar hover */
+            .sidenav a:hover {
+                color: #ffd700;
+                background-color: #444;
+            }
+    
+            /* Logo styling */
+            .logo {
+                font-weight: bold;
+                color: #ffd700;
+                margin: 20px;
+            }
+    
+            .logo span {
+                color: #ffd700;
+            }
+    
+            /* Main content margin */
+            #main {
+                margin-left: 300px;
+                padding: 20px;
+                transition: margin-left .5s;
+            }
+    
+            /* Form styling */
+            .form-control:focus {
+                box-shadow: none;
+                border-color: #ffd700;
+            }
+    
+            /* Profile button styling */
+            .profile-button {
+                background: #333;
+                color: white;
+                border: 1px solid #ffd700;
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+    
+            .profile-button:hover {
+                background: #444;
+                border-color: #ffd700;
+                color: #ffd700;
+            }
+    
+            /* Labels and elements */
+            .labels {
+                font-size: 14px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 5px;
+            }
+    
+            /* Box styling */
+            .ob {
+                background-color: #444;
+                border: 2px solid #ffd700;
+                padding: 10px;
+                margin: 5px;
+                color: white;
+            }
+    
+            /* Profile Card Styling */
+            .profile-container {
+                background-color: #404040;
+                padding: 20px;
+                border-radius: 10px;
+            }
+    
+            .profile-container h4 {
+                color: #ffd700;
+                font-weight: bold;
+            }
+    
+            /* Input field styles */
+            .input-field {
+                margin-bottom: 20px;
+            }
+    
+            /* File upload styling */
+            #img {
+                margin-top: 10px;
+            }
+    
+            /* Profile picture styling */
+            .profile-image {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+            }
+    
+            /* Grid and layout for the form */
+            .row {
+                margin-top: 30px;
+            }
+    
+            /* Centering form content */
+            .col-md-5 {
+                margin-left: auto;
+                margin-right: auto;
+            }
+    
+            /* Section Styling */
+            .profile-section {
+                background-color: #444;
+                padding: 20px;
+                border-radius: 10px;
+                margin-top: 20px;
+            }
+    
+            /* Layout adjustments */
+            .form-group {
+                margin-bottom: 20px;
+            }
+    
+            /* Adjust input fields */
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #333;
+                border: 2px solid #ffd700;
+                color: white;
+            }
+    
+            /* Image and Profile Layout */
+            .profile-img-container {
+                text-align: center;
+                padding: 10px;
+            }
+    
+            .profile-img-container img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+            }
+    
+            /* Form fields below the name */
+            .form-group input {
+                display: block;
+                margin-top: 10px;
+            }
+    
+            /* Responsive Adjustments */
+            @media (max-width: 767px) {
+                /* On small screens, make the sidebar not fixed and full width */
+                .sidenav {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                }
+    
+                #main {
+                    margin-left: 0;
+                    padding: 10px;
+                }
+    
+                .col-md-5 {
+                    width: 100%;
+                    margin-left: 0;
+                }
+    
+                /* Profile Image adjustments */
+                .profile-img-container img {
+                    width: 120px;
+                    height: 120px;
+                }
+    
+                /* Reduce font size on small screens */
+                .logo {
+                    font-size: 18px;
+                }
+    
+                .sidenav a {
+                    font-size: 16px;
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div id="mySidenav" class="sidenav">
+        <p class="logo"><span>R</span>-Roshni Nekkanti</p>
+        <a href="home" class="icon-a"><i class="fa fa-dashboard icons"></i> Dashboard</a>
+        {% if user.is_authenticated and user.is_staff and user.is_superuser %}
+        <a href="#" class="icon-a"><i class="fa fa-users icons"></i> Customers</a>
+        <a href="#" class="icon-a"><i class="fa fa-list icons"></i> Projects</a>
+        <a href="#" class="icon-a"><i class="fa fa-shopping-bag icons"></i> Orders</a>
+        <a href="#" class="icon-a"><i class="fa fa-tasks icons"></i> Inventory</a>
+        {% endif %}
+        <a href="profile" class="icon-a"><i class="fa fa-user icons"></i> View Profile</a>
+        <a href="contact" class="icon-a"><i class="fa fa-user icons"></i> Edit Profile</a>
+        <a href="certi" class="icon-a"><i class="fa fa-list-alt icons"></i> Updates</a>
+        <a href="projects"class="icon-a" href="{% url 'project_list'%}"><i class="fa fa-list-alt icons"></i>   Projects</a>
+        <a class="nav-link me-2 btn btn-outline-danger" href="{% url 'logout' %}">
+            <p style="color: white">Logout</p>
+        </a>
+    </div>
+
+    <!-- Main content -->
+    <div id="main">
+        <div class="head">
+            <div class="col-div-6">
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 border-right">
+                            <div class="profile-img-container">
+                                <input type="file" id="img" name="img" accept="image/*">
+                                <img class="rounded-circle mt-5" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="profile-section">
+                                <h4 class="text-center">Profile Settings</h4>
+
+                                <div class="form-group">
+                                    <label class="labels">Full Name</label>
+                                    {{ form.fullname }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Branch</label>
+                                    {{ form.branch }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Year</label>
+                                    {{ form.stdyear }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Phone Number</label>
+                                    {{ form.phno }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">GitHub</label>
+                                    {{ form.git }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">LinkedIn</label>
+                                    {{ form.linkedin }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">HackerRank</label>
+                                    {{ form.hrank }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Aadhar</label>
+                                    {{ form.aadhar }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Address</label>
+                                    {{ form.addr }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Admission Number</label>
+                                    {{ form.adnum }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="labels">Section</label>
+                                    {{ form.section }}
+                                </div>
+
+                                <div class="mt-2 text-start">
+                                    <button class="btn profile-button" type="submit">Save Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

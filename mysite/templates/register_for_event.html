@@ -1,0 +1,7 @@
+<td>
+    {% if user.is_authenticated %}
+        <a class="btn btn-success btn-sm" href="{% url 'register_for_event' item.0 %}">Register</a>
+    {% else %}
+        <a class="btn btn-secondary btn-sm" href="{% url 'login' %}">Login to Register</a>
+    {% endif %}
+</td>
