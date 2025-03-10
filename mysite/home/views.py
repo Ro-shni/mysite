@@ -441,6 +441,7 @@ def index(request):
     orders_stu = Orders.objects.all()
     contacts = Contact.objects.all()
     total_users = User.objects.count()
+    total_projects = Project.objects.count()
     grouped_contacts = {}
     for contact in contacts:
         branch_section_key = (contact.branch, contact.section)
@@ -464,6 +465,7 @@ def index(request):
         "form": form,
         "certies": certies,
         "total_users": total_users,
+        "total_projects": total_projects,
         "grouped_contacts": grouped_contacts,
     }
     return render(request, "index.html", context)
@@ -600,7 +602,62 @@ def delete_project(request, pk):
     return redirect('project_list')
 
 
+from .models import DOMAIN, BRANCH, SEC
+#woking filter project view
+def filter_projects(request):
+    projects = Project.objects.all()
 
+    # Fetch filter parameters
+    selected_domains = request.GET.getlist('domain')
+    selected_branches = request.GET.getlist('branch')
+    selected_sections = request.GET.getlist('section')
+
+    # Apply filtering conditions
+    if selected_domains:
+        projects = projects.filter(domain__in=selected_domains)
+    if selected_branches:
+        projects = projects.filter(branch__in=selected_branches)
+    if selected_sections:
+        projects = projects.filter(section__in=selected_sections)
+
+    total_projects = projects.count()
+
+    return render(request, 'filter_projects.html', {
+        'projects': projects,
+        'total_projects': total_projects,
+        'selected_domains': selected_domains,
+        'selected_branches': selected_branches,
+        'selected_sections': selected_sections,
+        'DOMAIN': DOMAIN,
+        'BRANCH': BRANCH,
+        'SEC': SEC
+    })
+from django.shortcuts import render
+from .models import Project
+
+'''
+def filtered_project_list(request):
+    branch_filter = request.GET.get('branch', '')  
+    section_filter = request.GET.get('section', '')
+
+    projects = Project.objects.all()
+
+    if branch_filter:
+        projects = projects.filter(branch=branch_filter)
+    if section_filter:
+        projects = projects.filter(section=section_filter)
+
+    branches = Project.objects.values_list('branch', flat=True).distinct()
+    sections = Project.objects.values_list('section', flat=True).distinct()
+
+    return render(request, 'project_list.html', {
+        'projects': projects,
+        'branches': branches,
+        'sections': sections,
+        'selected_branch': branch_filter,
+        'selected_section': section_filter
+    })
+'''
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Certi, Registration
@@ -638,4 +695,138 @@ def event_list(request):
     })
 
 
+from django.shortcuts import render, redirect
+from .models import Team, Contact, Mentor, ProgressReport
 
+# View to create a team
+def create_team(request):
+    if request.method == "POST":
+        team_name = request.POST['team_name']
+        mentor_id = request.POST['mentor_id']
+        mentor = Mentor.objects.get(id=mentor_id)
+        team = Team.objects.create(name=team_name, mentor=mentor)
+        return redirect('team_list')  # Redirect to list of teams
+    mentors = Mentor.objects.all()
+    return render(request, 'create_team.html', {'mentors': mentors})
+
+# View to add a student to a team
+def add_student_to_team(request, team_id):
+    if request.method == "POST":
+        student_id = request.POST['student_id']  # Student ID from form
+        student = Contact.objects.get(id=student_id)  # Get student
+        team = Team.objects.get(id=team_id)  # Get team
+        team.members.add(student)  # Add student to team
+        return redirect('team_detail', team_id=team.id)
+    students = Contact.objects.all()
+    return render(request, 'add_student_to_team.html', {'students': students})
+
+# View to create a progress report
+def create_progress_report(request, student_id):
+    if request.method == "POST":
+        report_title = request.POST['report_title']
+        report_description = request.POST['report_description']
+        status = request.POST['status']
+        student = Contact.objects.get(id=student_id)
+        project_id = request.POST['project_id']
+        project = Project.objects.get(id=project_id)
+        ProgressReport.objects.create(
+            student=student,
+            project=project,
+            report_title=report_title,
+            report_description=report_description,
+            status=status
+        )
+        return redirect('student_progress', student_id=student.id)
+    projects = Project.objects.all()
+    return render(request, 'create_progress_report.html', {'projects': projects})
+
+from .models import Team  # Assuming you have a Team model
+
+def team_list(request):
+    teams = Team.objects.all()
+    return render(request, 'team_list.html', {'teams': teams})
+
+def team_detail(request, team_id):
+    # Fetch the team by ID
+    team = get_object_or_404(Team, id=team_id)
+    # Fetch team members (if you have a Many-to-Many relationship or related field)
+    members = team.members.all()  # Assuming you have a relation for members, adjust if needed
+    return render(request, 'team_detail.html', {'team': team, 'members': members})
+
+def student_progress(request, student_id):
+    # Retrieve the student and their progress reports
+    student = get_object_or_404(Contact, id=student_id)
+    progress_reports = ProgressReport.objects.filter(student=student)
+    
+    # Pass the progress reports to the template
+    return render(request, 'student_progress.html', {'student': student, 'progress_reports': progress_reports})
+
+from .forms import MentorForm
+from django.contrib.auth.models import User
+
+
+def add_mentor(request):
+    if request.method == 'POST':
+        form = MentorForm(request.POST)
+        if form.is_valid():
+            # Create the User object first
+            user = User.objects.create_user(
+                username=form.cleaned_data['email'],  # You can customize the username logic
+                email=form.cleaned_data['email']
+            )
+
+            # Save the mentor with the created user
+            mentor = form.save(commit=False)
+            mentor.user = user  # Associate the User with Mentor
+            mentor.save()
+
+            return redirect('mentor_list')  # Redirect to a mentor list or other page
+
+    else:
+        form = MentorForm()
+
+    return render(request, 'add_mentor.html', {'form': form})
+
+# home/views.py
+def mentor_list(request):
+    mentors = Mentor.objects.all()
+    return render(request, 'mentor_list.html', {'mentors': mentors})
+
+
+def mentor_operations(request):
+    mentors = Mentor.objects.all()  # Get all mentors
+    teams = Team.objects.all()  # Get all teams
+    contacts = Contact.objects.all()  # Get all students (Contact model)
+    progress_reports = ProgressReport.objects.all()  # Get all progress reports
+
+    # Return to a template with all required data
+    return render(request, 'mentor_operations.html', {
+        'mentors': mentors,
+        'teams': teams,
+        'contacts': contacts,
+        'progress_reports': progress_reports,
+    })
+
+def operations_dashboard(request):
+    mentors = Mentor.objects.all()
+    teams = Team.objects.all()
+    
+    return render(request, 'operations_dashboard.html', {
+        'mentors': mentors,
+        'teams': teams,
+    })
+
+
+from django.shortcuts import render
+from .models import ProgressReport
+
+def search_student_progress(request):
+    student_name = request.GET.get('student_name')
+    
+    if student_name:
+        # Assuming 'student_name' is a part of the student's full name
+        progress_reports = ProgressReport.objects.filter(student__fullname__icontains=student_name)
+    else:
+        progress_reports = ProgressReport.objects.all()
+
+    return render(request, 'search_student_progress.html', {'progress_reports': progress_reports})

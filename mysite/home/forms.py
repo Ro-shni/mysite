@@ -23,4 +23,14 @@ class contactform(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['project_name', 'project_link', 'description', 'start_date', 'end_date']
+        fields = ['project_name', 'project_link', 'description', 'start_date', 'end_date','branch','section','domain']
+
+# home/forms.py
+from django import forms
+from .models import Mentor
+
+class MentorForm(forms.ModelForm):
+    class Meta:
+        model = Mentor
+        fields = ['full_name', 'email']  # Include fields you want in the form
+

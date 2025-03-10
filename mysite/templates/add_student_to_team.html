@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student to Team</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Add Student to Team</h1>
+        
+        <form method="POST" class="team-form">
+            {% csrf_token %}
+            
+            <label for="student_id" class="form-label">Select Student:</label>
+            <select name="student_id" id="student_id" class="form-select">
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.fullname }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit" class="btn-submit">Add to Team</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
+<style>
+    /* General Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Container Styling */
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Title */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* Form Styling */
+.team-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Label Styling */
+.form-label {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Select Styling */
+.form-select {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+
+/* Focus Effect for Select */
+.form-select:focus {
+    outline: none;
+    border: 1px solid #007bff;
+    background-color: #fff;
+}
+
+/* Submit Button Styling */
+.btn-submit {
+    padding: 12px 24px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #218838;
+}
+
+/* Error Message Styling */
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .btn-submit {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
+
+</style>

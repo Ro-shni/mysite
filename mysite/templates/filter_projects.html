@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Student Projects</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Sidebar for Filters */
+        .sidebar {
+            width: 25%;
+            background: #fff;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 27%;
+            padding: 20px;
+            flex-grow: 1;
+            width: 73%;
+        }
+
+        .project-list {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .project {
+            background: #e9f5ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: left;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .project strong {
+            color: #007bff;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                box-shadow: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar (Left) -->
+    <div class="sidebar">
+        <h2>Filter Projects</h2>
+        <form method="GET">
+            <fieldset>
+                <legend>Filter by Domain</legend>
+                {% for domain_key, domain_value in DOMAIN %}
+                    <label>
+                        <input type="checkbox" name="domain" value="{{ domain_key }}" 
+                        {% if domain_key in selected_domains %}checked{% endif %}> 
+                        {{ domain_value }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Filter by Branch</legend>
+                {% for branch_key, branch_value in BRANCH %}
+                    <label>
+                        <input type="checkbox" name="branch" value="{{ branch_key }}" 
+                        {% if branch_key in selected_branches %}checked{% endif %}> 
+                        {{ branch_value }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Filter by Section</legend>
+                {% for section_key, section_value in SEC %}
+                    <label>
+                        <input type="checkbox" name="section" value="{{ section_key }}" 
+                        {% if section_key in selected_sections %}checked{% endif %}> 
+                        {{ section_value }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <button type="submit">Apply Filters</button>
+            <button type="reset" onclick="window.location.href='?';">Clear Filters</button>
+        </form>
+    </div>
+
+    <!-- Main Content Area (Right) -->
+    <div class="main-content">
+        <div class="project-list">
+            <h2>Total Projects: {{ total_projects }}</h2>
+            {% for project in projects %}
+                <div class="project">
+                    <strong>{{ project.project_name }}</strong> 
+                    <br>📌 <b>Branch:</b> {{ project.branch }} 
+                    <br>📌 <b>Section:</b> {{ project.section }}
+                    <br>📌 <b>Domain:</b> {{ project.get_domain_display }}
+                </div>
+            {% empty %}
+                <p>No projects found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

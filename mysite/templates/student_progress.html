@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Progress</title>
+</head>
+<body>
+
+    <h1>Progress Report for {{ student.fullname }}</h1>
+    
+    <h2>Progress Reports</h2>
+<ul>
+    {% for report in progress_reports %}
+        <li>
+            <strong>Project:</strong> {{ report.project }} <br>  <!-- Temporarily display the full project object -->
+            <strong>Title:</strong> {{ report.report_title }} <br>
+            <strong>Status:</strong> {{ report.status }} <br>
+            <strong>Description:</strong> {{ report.report_description }} <br>
+            <strong>Date Submitted:</strong> {{ report.date_submitted }} <br>
+        </li>
+    {% empty %}
+        <li>No progress reports available.</li>
+    {% endfor %}
+</ul>
+
+
+</body>
+</html>
+

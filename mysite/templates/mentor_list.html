@@ -1,0 +1,16 @@
+<!-- templates/mentor_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mentor List</title>
+</head>
+<body>
+    <h1>Mentor List</h1>
+    <ul>
+        {% for mentor in mentors %}
+            <li>{{ mentor.full_name }} - {{ mentor.email }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

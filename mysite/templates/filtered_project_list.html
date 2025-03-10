@@ -1,0 +1,37 @@
+{% block content %}
+<h2>Project List</h2>
+
+<!-- Filter Form -->
+<form method="GET">
+    <label for="branch">Filter by Branch:</label>
+    <select name="branch">
+        <option value="">All</option>
+        {% for branch in branches %}
+            <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="section">Filter by Section:</label>
+    <select name="section">
+        <option value="">All</option>
+        {% for section in sections %}
+            <option value="{{ section }}" {% if section == selected_section %}selected{% endif %}>{{ section }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Display Projects -->
+{% for project in projects %}
+    <div class="project-card">
+        <h3>{{ project.project_name }}</h3>
+        <p><strong>Branch:</strong> {{ project.branch }} | <strong>Section:</strong> {{ project.section }}</p>
+        <p>{{ project.description }}</p>
+        <a href="{{ project.project_link }}" target="_blank">View Project</a>
+    </div>
+{% empty %}
+    <p>No projects found.</p>
+{% endfor %}
+
+{% endblock %}

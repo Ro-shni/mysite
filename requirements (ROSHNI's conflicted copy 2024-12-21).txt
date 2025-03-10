@@ -1,0 +1,31 @@
+# Core Django
+django>=4.2.16
+
+# Database support (for PostgreSQL on Heroku)
+psycopg2-binary
+
+# WSGI HTTP Server
+gunicorn
+
+# Whitenoise for serving static files
+whitenoise
+
+# Heroku integration (optional but recommended)
+django-heroku
+
+# Image processing
+pillow
+
+# To handle Heroku PostgreSQL database URLs
+dj-database-url
+
+# Static files management
+django-staticfiles
+
+# Security and settings
+django-environ
+
+# Python version (specify based on your project setup)
+python-dotenv
+
+# Any other libraries you have used in your project

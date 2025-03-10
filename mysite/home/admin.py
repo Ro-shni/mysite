@@ -23,3 +23,9 @@ if not admin.site.is_registered(Registration):
     class RegistrationAdmin(admin.ModelAdmin):
         list_display = ('user', 'event', 'registered_on')
     admin.site.register(Registration, RegistrationAdmin)
+
+from .models import Mentor, Team, ProgressReport
+
+admin.site.register(Mentor)
+admin.site.register(Team)
+admin.site.register(ProgressReport)

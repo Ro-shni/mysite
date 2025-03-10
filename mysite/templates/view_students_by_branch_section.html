@@ -1,61 +1,138 @@
-<!--
-<h2>Branch: {{ branch }} - Section: {{ section }}</h2>
-<ul>
-    {% for contact in contacts %}
-        <li>{{ contact.fullname }}</li>
-        <li>{{ contact.id }}</li>
-        {% for worker in workers %}
-            {% if worker.id == contact.staff_id %}<span>
-                Worker Name: {{ worker.username }}</li><span>
-                Worker ID: {{ worker.id }} <span>
-                <a class="btn btn-info btn-sm" href="{% url 'studentdetail' worker.id %}">View</a>
-            
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-</ul>
--->
-<h2>Student Details-Branch: {{ branch }} - Section: {{ section }}</h2>
-  <table>
-    <tr>
-        <th>contact name</th>
-        <th>Name</th>
-        <th>id</th>
-        <th>Profile</th>
-    </tr>
-   
-    {% for contact in contacts %}
-    {% for worker in workers %}
-    {% if worker.id == contact.staff_id %}
-    <tr>
-        <td>{{ contact.fullname }}</td>
-        <td>{{ worker.username }}</td>
-        <td>{{ worker.id }} </td>
-        <td><a class="btn btn-info btn-sm" href="{% url 'studentdetail' worker.id %}">View</a></td>
-    </tr>
-    {% endif %}
-    {% endfor %}
-    {% endfor %}
-  </table>
+<h2 class="title">Student Details - Branch: {{ branch }} - Section: {{ section }}</h2>
 
-  <style>
-    table{
-        background-color: beige;
-        margin: 20px;
-        border-collapse: separate;
-        border: solid;
-       border-collapse: collapse;
+<!-- Search Filter -->
+<div class="search-container">
+  <input type="text" class="search-input" id="searchInput" placeholder="Search by contact name, worker name, or worker ID">
+</div>
+
+<table id="studentsTable">
+  <thead>
+    <tr>
+      <th>Contact Name</th>
+      <th>Name</th>
+      <th>ID</th>
+      <th>Profile</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contact in contacts %}
+      {% for worker in workers %}
+        {% if worker.id == contact.staff_id %}
+          <tr>
+            <td>{{ contact.fullname }}</td>
+            <td>{{ worker.username }}</td>
+            <td>{{ worker.id }}</td>
+            <td><a class="btn-view" href="{% url 'studentdetail' worker.id %}">View</a></td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+
+<style>
+  /* Container Styles */
+  .title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+
+  /* Search Input Styling */
+  .search-container {
+    margin-bottom: 20px;
+    text-align: right;
+  }
+
+  .search-input {
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
+  /* Table Styles */
+  table {
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    overflow: hidden;
+  }
+
+  /* Table Header */
+  thead {
+    background-color: #2c3e50;
+    color: #fff;
+  }
+
+  th {
+    padding: 15px;
+    font-weight: bold;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+  }
+
+  /* Table Body */
+  tbody tr:nth-child(even) {
+    background-color: #f1f1f1;
+  }
+
+  tbody tr:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+  }
+
+  td {
+    padding: 12px 15px;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+  }
+
+  td a {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  td a:hover {
+    background-color: #2980b9;
+  }
+
+  /* Table Border */
+  tr td, tr th {
+    border-bottom: 1px solid #ddd;
+  }
+</style>
+
+<script>
+  // Search Functionality
+  document.getElementById('searchInput').addEventListener('input', function() {
+    let filter = this.value.toLowerCase();
+    let table = document.getElementById("studentsTable");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+      let cells = rows[i].getElementsByTagName("td");
+      let contactName = cells[0].textContent.toLowerCase();
+      let workerName = cells[1].textContent.toLowerCase();
+      let workerID = cells[2].textContent.toLowerCase();
+
+      if (contactName.indexOf(filter) > -1 || workerName.indexOf(filter) > -1 || workerID.indexOf(filter) > -1) {
+        rows[i].style.display = "";
+      } else {
+        rows[i].style.display = "none";
+      }
     }
-    tr th{
-        padding: 20px;
-        border: double;
-    }
-    tr td{
-        border: solid;
-        border-collapse: collapse;
-        padding: 20px;
-    }
-    td{
-        background-color: rgb(208, 247, 247);
-    }
-  </style>
+  });
+</script>

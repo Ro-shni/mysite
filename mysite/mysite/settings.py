@@ -151,8 +151,4 @@ import dj_database_url
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-
-import django_heroku
-django_heroku.settings(locals())
 
